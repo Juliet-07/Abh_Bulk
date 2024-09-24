@@ -131,7 +131,7 @@ const Navbar = () => {
                 </span>
                 <FiShoppingCart className="w-6 h-6 drop-shadow-xl" />
               </button>
-              <button
+              {/* <button
                 aria-label="Total"
                 onClick={handleDropshippingClick}
                 // onClick={toggleCartDrawer}
@@ -141,7 +141,7 @@ const Navbar = () => {
                   {totalItems}
                 </span>
                 <TfiPackage className="w-6 h-6 drop-shadow-xl" />
-              </button>
+              </button> */}
               {/* Profile */}
               <button
                 className="pl-5 text-white text-2xl font-bold"

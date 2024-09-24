@@ -30,42 +30,6 @@ const Home = ({ popularProducts, discountProducts, attributes }) => {
   const { loading, error, storeCustomizationSetting } = useGetSetting();
   const [products, setProducts] = useState([]);
 
-  const exclusiveDeals = [
-    {
-      image: "/dummy_products/tablet.png",
-      title: "C Idea 8 Inches Andriod Tablet",
-      price: "#62,000",
-    },
-    {
-      image: "/dummy_products/mobile_cooler.png",
-      title: "X52 Mobile Cooler",
-      path: "/contact-us",
-      price: "#62,000",
-    },
-    {
-      image: "/dummy_products/headphone.webp",
-      title: "Headphone",
-      path: "/contact-us",
-      price: "#62,000",
-    },
-    {
-      image: "/dummy_products/watch.png",
-      title: "1800 Smart Watches Ultra 8 Door",
-      path: "/about-us",
-      price: "#20,000",
-    },
-    // {
-    //   image: "/grocery.png",
-    //   title: "Grocery and Gourmet",
-    //   path: "/contact-us",
-    // },
-    // {
-    //   image: "/beauty.png",
-    //   title: "Health & Beauty",
-    //   path: "/contact-us",
-    // },
-  ];
-
   const sampleDealsData = [
     {
       image: "/dummy_products/hair.png",
@@ -208,7 +172,8 @@ const Home = ({ popularProducts, discountProducts, attributes }) => {
                           <div className="w-full flex flex-col justify-start">
                             <p className="text-xs md:text-base">{deal.name}</p>
                             <b>
-                              {deal.currency} {deal.sellingPrice}
+                              {deal.currency}{" "}
+                              {deal.sellingPrice.toLocaleString()}
                             </b>
                           </div>
                         </div>
