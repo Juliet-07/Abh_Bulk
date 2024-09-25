@@ -79,14 +79,11 @@ const AllProducts = ({ popularProducts, discountProducts, attributes }) => {
     }
   };
 
-
   const filteredProducts = selectedCategories.length
     ? products.filter((product) =>
-        selectedCategories.some((category) => {
-          if (Array.isArray(product.category)) {
-            return product.category.includes(category);
-          }
-          return product.category === category;
+        selectedCategories.some((selectedCategory) => {
+          // Check if the categoryId.name matches any of the selected categories
+          return product.categoryId?.name === selectedCategory;
         })
       )
     : products;
@@ -116,7 +113,10 @@ const AllProducts = ({ popularProducts, discountProducts, attributes }) => {
                 </div>
                 {/* Mobile Filter */}
                 <div className="md:hidden">
-                  <div className="flex items-center gap-10" onClick={toggleMobileFilter}>
+                  <div
+                    className="flex items-center gap-10"
+                    onClick={toggleMobileFilter}
+                  >
                     <p className="font-primarySemibold">Filter</p>
                     <span>{isMobileFilterVisible ? "▲" : "▼"}</span>
                   </div>
