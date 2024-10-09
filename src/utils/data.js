@@ -56,7 +56,7 @@ const pages = [
   },
   {
     title: "Retail Purchase",
-    href: "https://retail.abhmarkets.com",
+    href: "https://abhmarkets.com",
     icon: FiGift,
   },
   {

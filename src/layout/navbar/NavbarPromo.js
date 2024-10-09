@@ -147,13 +147,19 @@ const NavbarPromo = () => {
                 >
                   Sell on ABH
                 </Link>
+
                 <Link
                   onClick={() => setIsLoading(!isLoading)}
-                  href="https://retail.abhmarkets.com/"
-                  className="font-serif mx-4 py-2 text-sm font-medium hover:text-[#8DCB90]"
-                  target="_blank"
+                  href="https://abhmarkets.com/"
+                  legacyBehavior
                 >
-                  Retail Purchase
+                  <a
+                    className="font-serif mx-4 py-2 text-sm font-medium hover:text-[#8DCB90]"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Retail Purchase
+                  </a>
                 </Link>
               </div>
             </div>
