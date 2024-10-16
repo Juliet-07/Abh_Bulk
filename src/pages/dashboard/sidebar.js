@@ -63,7 +63,7 @@ const Sidebar = ({ title, description, children }) => {
         <Loading loading={isLoading} />
       ) : (
         <Layout title={title ? title : "Dashboard"}>
-          <div className="p-4 md:p-10 flex items-stretch">
+          <div className="p-0 md:p-10 flex items-stretch">
             {/* side nav */}
             <div className="w-64 h-screen bg-white shadow-lg hidden md:block">
               <div className="mb-4 p-3">

@@ -15,8 +15,11 @@ const Help = () => {
   return (
     <>
       <Sidebar>
-        <div className="w-full border border-[#CFCBCB] border-l-4 border-l-[#359E52] rounded-md p-4 font-primaryBold bg-white md:mx-3">Help</div>
-        <div className="w-full flex flex-col md:flex-row items-stretch justify-between gap-6 md:p-10">
+        <div className="w-full p-4 md:p-0">
+          <div className="w-full border border-[#CFCBCB] border-l-4 border-l-[#359E52] rounded-md p-4 font-primaryBold bg-white md:mx-3">Help</div>
+        </div>
+        
+        <div className="w-full flex flex-col md:flex-row items-stretch justify-between gap-6 md:p-10 p-4">
           {/* Reach out to us */}
           <div className="md:w-[476px] md:h-[300px] bg-[#FFFFFF] flex flex-col p-6 md:p-10 rounded-t-[100px] rounded-r-0 rounded-b-0 rounded-l-[100px]">
             <div className="w-full font-primaryBold text-2xl text-black text-center">
@@ -31,7 +34,7 @@ const Help = () => {
               <div className="flex">
                 <FiPhone size={20} />
                 <p className="mx-4">Call us</p>
-                <p>123456789</p>
+                <p>+2347061131509</p>
               </div>
             </div>
           </div>

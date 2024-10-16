@@ -21,7 +21,19 @@ const Dashboard = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
   const [orders, setOrders] = useState([]);
-  const [inventory, setInventory] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 2;
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const totalPages = Math.ceil(orders.length / itemsPerPage);
+
+  const paginatedTable = orders.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
 
   useEffect(() => {
     const getMyOrders = async () => {
@@ -34,7 +46,7 @@ const Dashboard = () => {
           },
         });
         console.log(response.data.data.data, "Orders");
-        setOrders(response.data.data.data);
+        setOrders(response.data.data.data.reverse());
         setLoading(false);
       } catch (error) {
         console.error("Error fetching orders:", error);
@@ -51,8 +63,8 @@ const Dashboard = () => {
       <Sidebar>
         <div className="flex-grow md:px-6">
           {/* Dashboard Header */}
-          <div className="flex justify-between items-center mb-6">
-            <h1 className="text-xl font-primarySemibold">Dashboard</h1>
+          <div className="flex justify-between items-center mb-6 p-3 md:p-0">
+            <h1 className="md:text-xl font-primarySemibold">Dashboard</h1>
             <button className="flex items-center space-x-2 bg-[#8BCB90]/[12%] text-green-600 px-4 py-2 text-sm rounded-md font-primarySemibold">
               <FiDownload className="text-sm" />
               <span>Download</span>
@@ -60,23 +72,23 @@ const Dashboard = () => {
           </div>
 
           {/* Date Filters */}
-          <div className="flex space-x-4 mb-8 overflow-x-auto">
-            <button className="px-3 py-1 bg-orange-500 text-white rounded-md">
+          <div className="flex space-x-4 mb-4 overflow-x-auto px-3">
+            <button className="px-1 md:px-3 md:py-1 bg-orange-500 text-white rounded-md text-xs md:text-base">
               Today
             </button>
-            <button className="px-3 py-1 bg-gray-200 text-gray-700 rounded-md">
+            <button className="px-1 md:px-3 md:py-1 bg-gray-200 text-gray-700 rounded-md text-xs md:text-base">
               This week
             </button>
-            <button className="px-3 py-1 bg-gray-200 text-gray-700 rounded-md">
+            <button className="px-1 md:px-3 md:py-1 bg-gray-200 text-gray-700 rounded-md text-xs md:text-base">
               This month
             </button>
-            <button className="px-3 py-1 bg-gray-200 text-gray-700 rounded-md">
+            <button className="px-1 md:px-3 md:py-1 bg-gray-200 text-gray-700 rounded-md text-xs md:text-base">
               Customize date
             </button>
           </div>
 
           {/* Stats Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mb-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mb-4 md:mb-6 px-3">
             {/* <div className="bg-white p-4 rounded-md shadow-md border border-[#CFCBCB]">
               <div className="flex justify-between items-center">
                 <Image width={18} height={18} src="/sub.png" alt="logo" />
@@ -111,7 +123,7 @@ const Dashboard = () => {
           </div>
 
           {/* Recent Orders */}
-          <div className="bg-white p-4 rounded-md shadow-md">
+          <div className="bg-white p-4 rounded-md shadow-md px-3">
             <div className="flex justify-between items-center">
               <h2 className="text-sm font-primaryMedium text-[#373435] mb-4">
                 Recent Orders
@@ -122,20 +134,20 @@ const Dashboard = () => {
             </div>
             {orders.length > 0 ? (
               <div className="space-y-10">
-                {orders.map((order) => (
+                {paginatedTable.map((order) => (
                   <div
                     key={order.id}
                     className="bg-[#0B63B2]/[4%] rounded-md p-4 flex items-center md:space-x-4 border-l border-l-[#8BCB90]"
                   >
                     <Image
-                      src={order.imageUrl}
+                      src="/orderCart.jpg"
                       alt={order.product}
                       width={117}
                       height={112}
                       className="hidden md:block rounded-md"
                     />
                     <Image
-                      src={order.imageUrl}
+                      src="/orderCart.jpg"
                       alt={order.product}
                       width={50}
                       height={50}
@@ -145,10 +157,10 @@ const Dashboard = () => {
                       <h3 className="text-sm md:text-base font-primaryMedium text-[#373435]">
                         {order.product}
                       </h3>
-                      <p className="text-sm text-gray-500">
+                      <p className="text-xs md:text-sm text-gray-500">
                         Order: {order?._id?.substring(20, 24)}
                       </p>
-                      <p className="text-sm text-gray-500">
+                      <p className="text-xs md:text-sm text-gray-500">
                         Quantity: {order?.products?.length} product(s)
                       </p>
                     </div>
@@ -182,6 +194,21 @@ const Dashboard = () => {
                     </div>
                   </div>
                 ))}
+                <div className="flex justify-end mt-4 mb-2 font-primaryMedium">
+                  {Array.from({ length: totalPages }, (_, index) => (
+                    <button
+                      key={index + 1}
+                      onClick={() => handlePageChange(index + 1)}
+                      className={`w-8 rounded mx-1 p-2 ${
+                        currentPage === index + 1
+                          ? "bg-[#359E52] text-white"
+                          : "bg-gray-200 text-black"
+                      }`}
+                    >
+                      {index + 1}
+                    </button>
+                  ))}
+                </div>
               </div>
             ) : (
               <table className="w-full">

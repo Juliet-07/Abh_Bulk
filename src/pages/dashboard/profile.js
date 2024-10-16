@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import Image from "next/image";
 import Sidebar from "./sidebar";
 import { IoArrowBackOutline, IoPersonSharp } from "react-icons/io5";
@@ -14,6 +15,11 @@ const Profile = () => {
     setActiveTab(tabNumber);
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem("abhUserInfo");
+    window.location.href = "/";
+  };
+
   let viewToRender;
   viewToRender = (
     <>
@@ -22,7 +28,7 @@ const Profile = () => {
           <div className="flex items-center gap-4">
             <div
               onClick={() => handleTabClick(1)}
-              className={`cursor-pointer ${
+              className={`cursor-pointer text-sm md:text-base ${
                 activeTab === 1
                   ? "text-green-600 font-medium"
                   : "text-[#C1C6C5]"
@@ -32,7 +38,7 @@ const Profile = () => {
             </div>
             <div
               onClick={() => handleTabClick(2)}
-              className={`cursor-pointer ${
+              className={`cursor-pointer text-sm md:text-base ${
                 activeTab === 2
                   ? "text-green-600 font-medium"
                   : "text-[#C1C6C5]"
@@ -56,7 +62,7 @@ const Profile = () => {
 
         <div
           className="font-primaryMedium cursor-pointer"
-          onClick={() => setShowPreview(true)}
+          // onClick={() => setShowPreview(true)}
         >
           Edit
         </div>
@@ -152,9 +158,9 @@ const Profile = () => {
       )}
 
       <Sidebar>
-        <div className="flex-grow md:px-6">
+        <div className="flex-grow p-3 md:px-6">
           {/* Profile Header */}
-          <div className="w-full flex justify-between items-center bg-white border border-[#CFCBCB] rounded-xl mb-6 p-4">
+          <div className="w-full flex justify-between items-center bg-white border border-[#CFCBCB] rounded-xl mb-6 p-3 md:p-4">
             <Link
               href="/dashboard/home"
               className="flex items-center space-x-2 text-black font-primarySemibold"
@@ -162,13 +168,16 @@ const Profile = () => {
               <IoArrowBackOutline size={20} />
               <span className="mx-2">Profile</span>
             </Link>
-            <button className="text-red-600 border border-red-600 px-4 py-2 rounded-md">
+            <button
+              onClick={handleLogout}
+              className="text-red-600 border border-red-600 px-4 py-2 rounded-md"
+            >
               Log out
             </button>
           </div>
 
           {/* Profile Banner */}
-          <div className="bg-gray-100 h-36 rounded-lg relative">
+          <div className="bg-gray-100 h-20 md:h-36 rounded-lg relative">
             <Image
               src="/profile-bg.svg"
               alt="Profile Banner"
@@ -180,7 +189,7 @@ const Profile = () => {
 
           {/* Profile Picture */}
           <div className="relative flex justify-center mt-[-50px]">
-            <div className="w-[120px] h-[120px] bg-white rounded-full border-2 border-[#8BCB90] flex items-center justify-center">
+            <div className="w-20 md:w-[120px] h-20 md:h-[120px] bg-white rounded-full border-2 border-[#8BCB90] flex items-center justify-center">
               <IoPersonSharp size={50} color="#8BCB90" />
             </div>
           </div>
@@ -203,20 +212,48 @@ const Profile = () => {
 export default Profile;
 
 const PersonalInfo = () => {
+  const apiURL = process.env.NEXT_PUBLIC_API_BASE_URL;
+  const token = localStorage.getItem("abhUserInfo");
+  const [userData, setUserData] = useState({});
+
+  useEffect(() => {
+    const getUserData = () => {
+      axios
+        .get(`${apiURL}/user/profile`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-type": "application/json; charset=UTF-8",
+          },
+        })
+        .then((response) => {
+          console.log(response.data.data, "User Info");
+          setUserData(response.data.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching vendors:", error);
+        });
+    };
+
+    getUserData();
+  }, []);
   return (
     <div>
-      <div className="w-full bg-white p-4 rounded-xl shadow-md space-y-4">
-        <div className="flex justify-between items-center">
+      <div className="w-full bg-white p-3 rounded-xl shadow-md space-y-4">
+        <div className="flex justify-between items-center text-sm md:text-base">
           <h3 className="font-medium text-gray-900">Name</h3>
-          <span className="font-semibold text-gray-700">Roselyn Klein</span>
+          <span className="font-semibold text-gray-700">
+            {userData.firstName + " " + userData.lastName}
+          </span>
         </div>
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center text-sm md:text-base">
           <h3 className="font-medium text-gray-900">Email</h3>
-          <span className="font-semibold text-gray-700">johndoe@gmail.com</span>
+          <span className="font-semibold text-gray-700 text-ellipse text-xs md:text-base">{userData.email}</span>
         </div>
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center text-sm md:text-base">
           <h3 className="font-medium text-gray-900">Phone</h3>
-          <span className="font-semibold text-gray-700">08123122311</span>
+          <span className="font-semibold text-gray-700">
+            {userData.phoneNumber}
+          </span>
         </div>
       </div>
     </div>
