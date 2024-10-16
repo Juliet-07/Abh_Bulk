@@ -77,24 +77,24 @@ const OrderDetails = () => {
           <div className="w-full h-[60px] bg-white mb-8 flex items-center px-5 font-primaryMedium shadow-md">
             Order Details
           </div>
-          <div className="w-full bg-white md:p-4">
+          <div className="w-full bg-white p-4">
             {/* Blocks */}
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-10">
-              <div className="min-w-[178px] min-h-[87px] border border-[#C1C6C5] rounded-lg flex flex-col items-center p-2">
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-4 md:gap-10">
+              <div className="min-w-[150px] min-h-[87px] border border-[#C1C6C5] rounded-lg flex flex-col items-center p-2 text-sm md:text-base">
                 <p>Order Number</p>
                 <p>{data?._id?.substring(20, 24)}</p>
               </div>
-              <div className="min-w-[178px] min-h-[87px] border border-[#C1C6C5] rounded-lg flex flex-col items-center p-2">
+              <div className="min-w-[150px] min-h-[87px] border border-[#C1C6C5] rounded-lg flex flex-col items-center p-2 text-sm md:text-base">
                 <p>Date Placed</p>
                 <p>{dayjs(data.created_at).format("MMMM D, YYYY")}</p>
               </div>
-              <div className="min-w-[178px] min-h-[87px] border border-[#C1C6C5] rounded-lg flex flex-col items-center p-2">
+              <div className="min-w-[150px] min-h-[87px] border border-[#C1C6C5] rounded-lg flex flex-col items-center p-2 text-sm md:text-base">
                 <p>Quantity Shipped</p>
                 <p>{data?.products?.length}</p>
               </div>
-              <div className="min-w-[178px] min-h-[87px] border border-[#C1C6C5] rounded-lg flex flex-col items-center p-2">
+              <div className="min-w-[150px] min-h-[87px] border border-[#C1C6C5] rounded-lg flex flex-col items-center p-2 text-sm md:text-base">
                 <p>Total Amount</p>
-                <p>₦ {data?.totalAmount}</p>
+                <p>₦ {data?.totalAmount.toLocaleString()}</p>
               </div>
               <div className="hidden min-w-[178px] min-h-[87px] border border-[#C1C6C5] rounded-lg md:flex flex-col items-center p-2">
                 <p>Payment Status</p>
@@ -103,19 +103,21 @@ const OrderDetails = () => {
             </div>
             {/* Products */}
             <div className="my-8">
-              <p className="my-4">Item(s) Placed</p>
+              <p className="my-4 text-sm md:text-base">Item(s) Placed</p>
               <div className="grid gap-4">
                 {data?.products?.map((product) => (
-                  <div className="w-full border border-[#C1C6C5] rounded-xl flex flex-col md:flex-row items-center md:gap-20 p-2">
+                  <div className="w-full border border-[#C1C6C5] rounded-xl flex flex-col md:flex-row items-center md:gap-20 p-2 text-xs md:text-base">
                     <p>Order #{product._id.substring(20, 24)}</p>
-                    <div className="flex items-center md:gap-4">
+                    <div className="flex items-center gap-4 p-2">
                       <img
                         src={product?.productId?.featured_image}
-                        className="w-[84px] h-[85px]"
+                        className="w-20 h-20"
                       />
                       <div>
                         <p>{product?.productId?.name}</p>
-                        <p>₦{product?.productId?.sellingPrice}</p>
+                        <p>
+                          ₦{product?.productId?.sellingPrice.toLocaleString()}
+                        </p>
                         <p>Quantity: {product?.quantity}</p>
                       </div>
                       <div className="flex gap-4">
@@ -128,7 +130,9 @@ const OrderDetails = () => {
               </div>
             </div>
             <div>
-              <h3 className="text-lg font-semibold mb-4">Order Tracking</h3>
+              <h3 className="font-semibold mb-4 text-sm md:text-lg">
+                Order Tracking
+              </h3>
 
               {statusTimeline.map((step) => (
                 <>
@@ -136,20 +140,22 @@ const OrderDetails = () => {
                     <div
                       className={`${
                         step?.completed ? " bg-[#08932E] " : " bg-[#373435] "
-                      } rounded-[100px] w-[50px] h-[50px] flex items-center justify-center`}
+                      } rounded-[100px] w-10 md:w-[50px] h-10 md:h-[50px] flex items-center justify-center`}
                     >
-                      <FiCheck size={30} color="white" />
+                      <FiCheck size={20} color="white" />
                     </div>
                     <div className="ml-4">
-                      <h3 className="font-primarySemibold">{step.status}</h3>
+                      <h3 className="font-primarySemibold text-sm md:text-base">
+                        {step.status}
+                      </h3>
                       {step.date && (
-                        <p className="text-gray-500">
+                        <p className="text-gray-500 text-sm md:text-base">
                           on {dayjs(step.date).format("MMM D, YYYY, h:mm A")}
                         </p>
                       )}
                     </div>
                   </div>
-                  <div className="w-full border-l-[2px] h-[58px] ml-[20px] my-2"></div>
+                  <div className="w-full border-l-[2px] h-[50px] ml-[20px] my-2"></div>
                 </>
               ))}
             </div>
