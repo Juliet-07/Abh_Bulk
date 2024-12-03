@@ -216,7 +216,7 @@ const ProductInfo = ({ params }) => {
                 {/* <p>14 units per carton</p> */}
                 <div>
                   <p className="text-[red] text-sm">
-                    Minimum order {product.maximumOrderPerCarton} of cartons
+                    Minimum order: {product.maximumOrderPerCarton} carton(s)
                   </p>
                 </div>
                 <div className="flex md:flex-row flex-col flex-wrap gap-[20px] md:items-center min-h-[60px]">

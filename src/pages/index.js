@@ -114,7 +114,7 @@ const Home = ({ popularProducts, discountProducts, attributes }) => {
       axios
         .get(`${apiURL}/products/list/wholesale`)
         .then((response) => {
-          console.log(response.data.data.products);
+          console.log(response.data);
           setProducts(response.data.data.products);
         })
         .catch((error) => {
