@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { useContext, useState,useMemo } from "react";
+import React, { useContext, useState, useMemo } from "react";
 import { useCart } from "react-use-cart";
 import { IoBagCheckOutline, IoClose, IoBagHandle } from "react-icons/io5";
 
@@ -14,13 +14,14 @@ import useUtilsFunction from "@hooks/useUtilsFunction";
 const Cart = () => {
   const router = useRouter();
   const [modalOpen, setModalOpen] = useState(false);
+  const userInfo = localStorage.getItem("abhUserInfo");
   const { isEmpty, items } = useCart();
   const { toggleCartDrawer, closeCartDrawer } = useContext(SidebarContext);
   const { currency } = useUtilsFunction();
 
-  const {
-    state: { userInfo },
-  } = useContext(UserContext);
+  // const {
+  //   state: { userInfo },
+  // } = useContext(UserContext);
 
   const handleOpenLogin = () => {
     if (router.push("/?redirect=/checkout")) {
@@ -36,9 +37,20 @@ const Cart = () => {
     }, 0);
   }, [items]);
 
-  const checkoutClass = (
+  const handleCheckout = () => {
+    if (userInfo) {
+      closeCartDrawer();
+      // Redirect to the checkout page if the user is logged in
+      router.push("/checkout");
+    } else {
+      // Open the login modal if the user is not logged in
+      handleOpenLogin();
+    }
+  };
+
+  const checkoutButton = (
     <button
-      onClick={closeCartDrawer}
+      onClick={handleCheckout}
       className="w-full py-3 px-3 rounded-lg bg-[#359E52] hover:bg-emerald-600 flex items-center justify-between bg-heading text-sm sm:text-base text-white focus:outline-none transition duration-300"
     >
       <span className="align-middle font-medium font-serif">
@@ -99,19 +111,7 @@ const Cart = () => {
             <CartItem key={i + 1} item={item} />
           ))}
         </div>
-        <div className="mx-5 my-3">
-          {items.length <= 0 ? (
-            checkoutClass
-          ) : (
-            <span>
-              {!userInfo ? (
-                <div onClick={handleOpenLogin}>{checkoutClass}</div>
-              ) : (
-                <Link href="/checkout">{checkoutClass}</Link>
-              )}
-            </span>
-          )}
-        </div>
+        <div className="mx-5 my-3">{items.length > 0 && checkoutButton}</div>
       </div>
     </>
   );
