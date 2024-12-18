@@ -210,7 +210,7 @@ const ProductInfo = ({ params }) => {
                   <p>{product.description}</p>
                 </div>
                 <div>
-                  <b>Price:</b> {product.currency + " " + product.sellingPrice}{" "}
+                  <b>Price:</b> {product.currency + " " + product.sellingPrice.toLocaleString()}{" "}
                   per carton
                 </div>
                 {/* <p>14 units per carton</p> */}

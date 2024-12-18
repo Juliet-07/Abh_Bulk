@@ -36,6 +36,7 @@ const AllProducts = ({ popularProducts, discountProducts, attributes }) => {
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [sortOption, setSortOption] = useState(sortingOptions[0]);
   const [isMobileFilterVisible, setIsMobileFilterVisible] = useState(false);
+  const [searchQuery, setSearchQuery] = useState(""); // State for search query
 
   useEffect(() => {
     if (router.asPath === "/") {
@@ -68,7 +69,7 @@ const AllProducts = ({ popularProducts, discountProducts, attributes }) => {
         return products; // Implement relevance sorting logic
       case "newest":
         return [...products].sort(
-          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+          (a, b) => new Date(b.created_at) - new Date(a.created_at)
         );
       case "priceHighLow":
         return [...products].sort((a, b) => b.price - a.price);
@@ -79,15 +80,38 @@ const AllProducts = ({ popularProducts, discountProducts, attributes }) => {
     }
   };
 
-  const filteredProducts = selectedCategories.length
-    ? products.filter((product) =>
-        selectedCategories.some((selectedCategory) => {
-          // Check if the categoryId.name matches any of the selected categories
-          return product.categoryId?.name === selectedCategory;
-        })
-      )
-    : products;
+  // const filteredProducts = selectedCategories.length
+  //   ? products.filter((product) =>
+  //       selectedCategories.some((selectedCategory) => {
+  //         // Check if the categoryId.name matches any of the selected categories
+  //         return product.categoryId?.name === selectedCategory;
+  //       })
+  //     )
+  //   : products;
 
+  const filteredProducts = products.filter((product) => {
+    // Match products by name with case-insensitive search
+    return product.name
+      ?.toLowerCase()
+      .includes(searchQuery.trim().toLowerCase());
+  });
+
+  // Prioritize search results
+  const prioritizedProducts = filteredProducts.sort((a, b) => {
+    const aMatch = a.name
+      ?.toLowerCase()
+      .includes(searchQuery.trim().toLowerCase());
+    const bMatch = b.name
+      ?.toLowerCase()
+      .includes(searchQuery.trim().toLowerCase());
+
+    // Matching products move to the top
+    if (aMatch && !bMatch) return -1;
+    if (!aMatch && bMatch) return 1;
+    return 0; // No change in order
+  });
+
+  // Apply sorting options after prioritization
   const sortedAndFilteredProducts = sortProducts(filteredProducts);
 
   const toggleMobileFilter = () => {
@@ -130,9 +154,18 @@ const AllProducts = ({ popularProducts, discountProducts, attributes }) => {
                   <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4 w-full">
                     <div className="md:text-xl font-primarySemibold">
                       All Products
-                      <span className="mx-2 font-primaryRegular">
+                      <span className="mx-2 font-primaryRegular text-xs">
                         ( {sortedAndFilteredProducts.length} products found)
                       </span>
+                    </div>
+                    <div className="w-full md:w-1/2">
+                      <input
+                        type="text"
+                        placeholder="Search for products..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="w-full p-2 border rounded"
+                      />
                     </div>
                     <div className="flex items-center gap-3">
                       <p className="font-primarySemibold">Sort by:</p>
@@ -141,6 +174,7 @@ const AllProducts = ({ popularProducts, discountProducts, attributes }) => {
                         options={sortingOptions}
                         value={sortOption}
                         onChange={handleSortChange}
+                        className="z-20"
                       />
                     </div>
                   </div>

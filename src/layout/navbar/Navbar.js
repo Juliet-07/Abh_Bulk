@@ -26,46 +26,78 @@ const Navbar = () => {
   const router = useRouter();
   const token = localStorage.getItem("abhUserInfo");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [products, setProducts] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
+  const [searchText, setSearchText] = useState("");
+  const [searchList, setSearchList] = useState([]);
   const [userData, setUserData] = useState({});
   const [imageUrl, setImageUrl] = useState("");
-  const [searchText, setSearchText] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
   const { toggleCartDrawer } = useContext(SidebarContext);
   const { totalItems } = useCart();
   const { id } = router.query;
 
-  // const {
-  //   state: { userInfo },
-  // } = useContext(UserContext);
+  useEffect(() => {
+    if (Cookies.get("userInfo")) {
+      const user = JSON.parse(Cookies.get("userInfo"));
+      setImageUrl(user.image);
+    }
+    const getProducts = async () => {
+      try {
+        const allProducts = [];
+        let page = 1;
+        const limit = 10; // Assuming 10 is the default limit
+        let totalPages = 1; // Initialize with a default value
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // return;
-    if (searchText) {
-      router.push(`/search?query=${searchText}`, null, { scroll: false });
-      setSearchText("");
-      handleLogEvent("search", `searched ${searchText}`);
+        do {
+          const response = await axios.get(`${apiURL}/products/list/retail`, {
+            params: { page, limit },
+          });
+          const { products, totalPages: responseTotalPages } =
+            response.data.data;
+
+          allProducts.push(...products); // Add current page products to the list
+          totalPages = responseTotalPages; // Update the total number of pages from the response
+          page++; // Move to the next page
+        } while (page <= totalPages); // Continue until all pages are fetched
+
+        console.log(allProducts); // Combined list of all products
+        setProducts(allProducts); // Set the combined products list
+      } catch (error) {
+        console.error("Error fetching all products:", error);
+      }
+    };
+    getProducts();
+  }, []);
+
+  const handleInputChange = (e) => {
+    const value = e.target.value;
+    setSearchText(value);
+
+    if (value.trim()) {
+      // Assuming each product has a 'name' property
+      const filtered = products.filter((item) =>
+        item.name.toLowerCase().includes(value.toLowerCase())
+      );
+      console.log(filtered, "checking search list");
+      setSearchList(filtered);
     } else {
-      router.push(`/ `, null, { scroll: false });
-      setSearchText("");
+      setSearchList([]);
     }
   };
 
-  const handleDropshippingClick = () => {
-    if (token) {
-      router.push(`/product-info/dropshipping`);
-    } else {
-      setModalOpen(true);
-    }
-  };
+  // const handleSuggestionClick = (suggestion) => {
+  //   setSearchText(suggestion);
+  //   setSearchList([]);
+  // };
 
-  // useEffect(() => {
-  //   if (Cookies.get("userInfo")) {
-  //     const user = JSON.parse(Cookies.get("userInfo"));
-  //     setImageUrl(user.image);
-  //   }
-  // }, []);
+  const handleSuggestionClick = (suggestion) => {
+    // Redirect to product page using the product id or slug
+    router.push(`/categories/${suggestion?.categoryId?._id}`); // Adjust URL based on your routing structure
+
+    setSearchText(suggestion.name); // Optional: Update the input with the selected suggestion
+    setSearchList([]); // Close the suggestion list
+  };
 
   useEffect(() => {
     const getUserData = () => {
@@ -94,6 +126,7 @@ const Navbar = () => {
 
     getUserData();
   }, []);
+
   return (
     <>
       <CartDrawer />
@@ -121,16 +154,17 @@ const Navbar = () => {
               </div>
             </Link>
             {/* search button */}
-            <div className="w-full transition-all duration-200 ease-in-out lg:flex lg:max-w-[520px] xl:max-w-[750px] 2xl:max-w-[900px] md:mx-12 lg:mx-4 xl:mx-0">
-              {/* <div className="w-full flex flex-col justify-center flex-shrink-0 relative z-30">
+            <div className="hidden md:block w-full transition-all duration-200 ease-in-out lg:flex lg:max-w-[520px] xl:max-w-[750px] 2xl:max-w-[900px] md:mx-12 lg:mx-4 xl:mx-0">
+              <div className="w-full flex flex-col justify-center flex-shrink-0 relative z-30">
                 <div className="flex flex-col mx-auto w-full">
                   <form
-                    onSubmit={handleSubmit}
+                    // onSubmit={handleSubmit}
                     className="relative pr-12 md:pr-14 bg-white overflow-hidden shadow-sm rounded-md w-full"
                   >
                     <label className="flex items-center py-0.5">
                       <input
-                        onChange={(e) => setSearchText(e.target.value)}
+                        // onChange={(e) => setSearchText(e.target.value)}
+                        onChange={handleInputChange}
                         value={searchText}
                         className="form-input w-full pl-5 appearance-none transition ease-in-out border text-input text-sm font-sans rounded-md min-h-10 h-10 duration-200 bg-white focus:ring-0 outline-none border-none focus:outline-none placeholder-gray-500 placeholder-opacity-75"
                         placeholder="Search"
@@ -144,8 +178,21 @@ const Navbar = () => {
                       <IoSearchOutline />
                     </button>
                   </form>
+                  {searchList.length > 0 && (
+                    <ul className="absolute top-10 z-30 bg-white w-full max-h-64 overflow-y-auto shadow-lg rounded-md mt-1 border border-gray-200">
+                      {searchList.map((list, index) => (
+                        <li
+                          key={index}
+                          onClick={() => handleSuggestionClick(list)}
+                          className="px-4 py-2 cursor-pointer hover:bg-gray-100"
+                        >
+                          {list.name}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                 </div>
-              </div> */}
+              </div>
             </div>
             <div className="hidden md:hidden md:items-center lg:flex xl:flex absolute inset-y-0 right-0 pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
               {/* <button
