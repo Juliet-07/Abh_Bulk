@@ -22,6 +22,7 @@ import { Navigation, Autoplay } from "swiper";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/autoplay";
+import { FaWhatsapp } from "react-icons/fa";
 
 const Home = ({ popularProducts, discountProducts, attributes }) => {
   const apiURL = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -153,6 +154,17 @@ const Home = ({ popularProducts, discountProducts, attributes }) => {
                   </Link>
                 </div>
               </div>
+
+              {/* WhatsApp Sticky Button For User Support */}
+              <a
+                href="https://wa.me/+2347068528399" // Replace with your WhatsApp number
+                target="_blank"
+                rel="noopener noreferrer"
+                className="fixed bottom-20 md:bottom-5 right-5 bg-green-500 rounded-full p-3 shadow-lg cursor-pointer z-50"
+              >
+                <FaWhatsapp size={35} color="white" />
+              </a>
+
               {/* <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-5 gap-3 md:gap-4 lg:gap-4 mb-4"> */}
               <div className="flex w-full px-3 sm:px-10">
                 <div className="flex flex-row items-center gap-[20px] overflow-x-scroll hide-scrollbar flex-1 md:justify-between ">

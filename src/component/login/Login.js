@@ -113,7 +113,7 @@ const Login = ({ setShowResetPassword, setModalOpen }) => {
             {/* <Error errorName={} /> */}
           </div>
           <div className="flex items-center justify-between">
-            {/* <div className="flex ms-auto">
+            <div className="flex ms-auto">
               <button
                 type="button"
                 onClick={() => setShowResetPassword(true)}
@@ -121,7 +121,7 @@ const Login = ({ setShowResetPassword, setModalOpen }) => {
               >
                 Forgot password?
               </button>
-            </div> */}
+            </div>
           </div>
           {loading ? (
             <button

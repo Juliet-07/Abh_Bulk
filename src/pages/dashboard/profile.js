@@ -60,12 +60,12 @@ const Profile = () => {
           </div>
         </div>
 
-        <div
+        {/* <div
           className="font-primaryMedium cursor-pointer"
           // onClick={() => setShowPreview(true)}
         >
           Edit
-        </div>
+        </div> */}
       </div>
 
       <div className="w-full py-4 md:py-10 2xl:py-20">
