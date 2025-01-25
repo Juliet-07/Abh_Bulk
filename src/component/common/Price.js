@@ -43,7 +43,7 @@ const Price = ({ product, price, card, currency, originalPrice }) => {
             }
           >
             {currency}
-            {product?.sellingPrice.toLocaleString()}
+            {(product?.sellingPrice ?? 0).toLocaleString()}
           </span>
           {originalPrice > price ? (
             <>
