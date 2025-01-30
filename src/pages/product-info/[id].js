@@ -210,10 +210,15 @@ const ProductInfo = ({ params }) => {
                   <p>{product.description}</p>
                 </div>
                 <div>
-                  <b>Price:</b> {product.currency + " " + product.sellingPrice.toLocaleString()}{" "}
+                  <b>Price:</b>{" "}
+                  {product.currency +
+                    " " +
+                    (product?.sellingPrice ?? 0).toLocaleString()}{" "}
                   per carton
                 </div>
-                {/* <p>14 units per carton</p> */}
+                <p className="text-blue-600">
+                  {product?.unitPerCarton} units per carton
+                </p>
                 <div>
                   <p className="text-[red] text-sm">
                     Minimum order: {product.maximumOrderPerCarton} carton(s)

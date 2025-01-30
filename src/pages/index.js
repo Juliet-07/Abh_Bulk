@@ -185,7 +185,8 @@ const Home = ({ popularProducts, discountProducts, attributes }) => {
                             <p className="text-xs md:text-base">{deal.name}</p>
                             <b>
                               {deal.currency}{" "}
-                              {deal.sellingPrice.toLocaleString()}
+                              {/* {deal.sellingPrice.toLocaleString()} */}
+                              {(deal?.sellingPrice ?? 0).toLocaleString()}
                             </b>
                           </div>
                         </div>
